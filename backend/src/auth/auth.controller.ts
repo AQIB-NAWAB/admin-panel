@@ -22,8 +22,20 @@ export class AuthController {
 
   @Post('signup')
   @HttpCode(HttpStatus.CREATED)
-  async signup(@Body() body: SignupDto) {
-    return this.authService.signup(body);
+  async signup(
+    @Body() body: SignupDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { access_token, user } = await this.authService.signup(body);
+
+    res.cookie('access_token', access_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 1000 * 60 * 60 * 24,
+    });
+
+    return { user };
   }
 
   @Post('login')
