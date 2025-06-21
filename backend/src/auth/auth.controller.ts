@@ -15,6 +15,7 @@ import { SignupDto } from './dto/signup.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/common/decorators/get-user.decorator';
 import { UserResponsePayload } from './interfaces/jwt-payload.interface';
+import { clearToken, sendToken } from 'src/common/utils/auth';
 
 @Controller('auth')
 export class AuthController {
@@ -22,8 +23,15 @@ export class AuthController {
 
   @Post('signup')
   @HttpCode(HttpStatus.CREATED)
-  async signup(@Body() body: SignupDto) {
-    return this.authService.signup(body);
+  async signup(
+    @Body() body: SignupDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { access_token, user } = await this.authService.signup(body);
+
+    sendToken(res, access_token);
+
+    return { user };
   }
 
   @Post('login')
@@ -34,12 +42,7 @@ export class AuthController {
   ) {
     const { access_token, user } = await this.authService.login(data);
 
-    res.cookie('access_token', access_token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 1000 * 60 * 60 * 24,
-    });
+    sendToken(res, access_token);
 
     return { user };
   }
@@ -53,11 +56,8 @@ export class AuthController {
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   logout(@Res({ passthrough: true }) res: Response) {
-    res.clearCookie('access_token', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-    });
+    clearToken(res);
+
     return { message: 'Logged out successfully.' };
   }
 }
