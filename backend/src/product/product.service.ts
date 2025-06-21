@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   ForbiddenException,
+  BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -50,6 +51,24 @@ export class ProductService {
     const prod = await this.findOwnedProduct(id, ownerId);
     Object.assign(prod, dto);
     return this.repo.save(prod);
+  }
+
+  async updateImage(id: string, image: Express.Multer.File, ownerId: string) {
+    if (!image) {
+      throw new BadRequestException('No image file provided');
+    }
+
+    const product = await this.repo.findOne({
+      where: { id, ownerId },
+    });
+    if (!product) {
+      throw new NotFoundException('Product not found or not owned by you');
+    }
+
+    const imageUrl = await uploadToImgBB(image.buffer);
+    product.image = imageUrl;
+
+    return this.repo.save(product);
   }
 
   async remove(id: string, ownerId: string) {

@@ -12,6 +12,7 @@ import {
   ParseUUIDPipe,
   UseInterceptors,
   UploadedFile,
+  Patch,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/common/decorators/get-user.decorator';
@@ -64,6 +65,17 @@ export class ProductController {
     @GetUser() user: JwtRequestUser,
   ) {
     return this.productService.update(id, dto, user.id);
+  }
+
+  @Patch(':id/image')
+  @UseGuards(IsOwnerGuard)
+  @UseInterceptors(FileInterceptor('image'))
+  async updateImage(
+    @Param('id', ParseUUIDPipe) id: string,
+    @UploadedFile() image: Express.Multer.File,
+    @GetUser() user: JwtRequestUser,
+  ) {
+    return this.productService.updateImage(id, image, user.id);
   }
 
   @Delete(':id')
