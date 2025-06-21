@@ -13,6 +13,7 @@ import {
   UseInterceptors,
   UploadedFile,
   Patch,
+  BadRequestException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/common/decorators/get-user.decorator';
@@ -22,6 +23,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { JwtRequestUser } from 'src/common/interfaces/jwt-request-user';
 import { IsOwnerGuard } from 'src/common/gaurds/is-owner.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { isValidImageFile } from 'src/common/utils/file';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('products')
@@ -34,8 +36,12 @@ export class ProductController {
   create(
     @Body() dto: CreateProductDto,
     @GetUser() user: JwtRequestUser,
-    @UploadedFile() image?: Express.Multer.File,
+    @UploadedFile() image: Express.Multer.File,
   ) {
+    if (!isValidImageFile(image.mimetype)) {
+      throw new BadRequestException('Only image files are allowed');
+    }
+
     return this.productService.create({ ...dto, ownerId: user.id }, image);
   }
 
@@ -75,11 +81,15 @@ export class ProductController {
     @UploadedFile() image: Express.Multer.File,
     @GetUser() user: JwtRequestUser,
   ) {
+    if (!isValidImageFile(image.mimetype)) {
+      throw new BadRequestException('Only image files are allowed');
+    }
+
     return this.productService.updateImage(id, image, user.id);
   }
 
   @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(HttpStatus.OK)
   @UseGuards(IsOwnerGuard)
   remove(
     @Param(

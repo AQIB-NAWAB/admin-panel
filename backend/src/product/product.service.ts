@@ -1,7 +1,6 @@
 import {
   Injectable,
   NotFoundException,
-  ForbiddenException,
   BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -24,7 +23,11 @@ export class ProductService {
   ) {
     let imageUrl = '';
     if (image) {
-      imageUrl = await uploadToImgBB(image.buffer);
+      try {
+        imageUrl = await uploadToImgBB(image.buffer);
+      } catch {
+        throw new BadRequestException('Image upload failed');
+      }
     }
 
     const product = this.repo.create({ ...data, image: imageUrl });
@@ -32,14 +35,18 @@ export class ProductService {
   }
 
   async findAll(ownerId: string) {
-    return this.repo.find({ where: { ownerId } });
+    return this.repo.find({
+      where: { ownerId },
+      order: { createdAt: 'DESC' },
+    });
   }
 
   private async findOwnedProduct(id: string, ownerId: string) {
-    const prod = await this.repo.findOne({ where: { id } });
-    if (!prod) throw new NotFoundException('Product not found');
-    if (prod.ownerId !== ownerId)
-      throw new ForbiddenException('You do not own this product');
+    const prod = await this.repo.findOne({ where: { id, ownerId } });
+
+    if (!prod)
+      throw new NotFoundException('Product not found or not owned by you');
+
     return prod;
   }
 
@@ -65,8 +72,15 @@ export class ProductService {
       throw new NotFoundException('Product not found or not owned by you');
     }
 
-    const imageUrl = await uploadToImgBB(image.buffer);
-    product.image = imageUrl;
+    try {
+      const imageUrl = await uploadToImgBB(image.buffer);
+      product.image = imageUrl;
+    } catch (err) {
+      console.log(err);
+      throw new BadRequestException(
+        'Error Uploading image , please try again later',
+      );
+    }
 
     return this.repo.save(product);
   }

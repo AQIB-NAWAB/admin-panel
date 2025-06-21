@@ -1,0 +1,29 @@
+:root {
+  --primary: #3642f0;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+}
+
+.title {
+  font-family: "Poppins", sans-serif;
+}
+.description {
+  font-family: "Inter";
+  font-size: 18px;
+  color: #555;
+}
+.btn {
+  font-family: "Inter";
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.btn:hover {
+  border: 1px solid var(--primary) !important;
+  color: black !important;
+}
