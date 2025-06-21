@@ -12,6 +12,7 @@ import {
   JwtPayload,
   UserResponsePayload,
 } from './interfaces/jwt-payload.interface';
+import { createTokenForUser } from 'src/common/utils/auth';
 
 @Injectable()
 export class AuthService {
@@ -35,28 +36,34 @@ export class AuthService {
   async login(
     data: LoginDto,
   ): Promise<{ access_token: string; user: UserResponsePayload }> {
-    const user = await this.validateUser(data.email, data.password);
+    const userEntity = await this.validateUser(data.email, data.password);
 
-    const payload: JwtPayload = { sub: user.id, email: user.email };
-    return {
-      access_token: this.signPayload(payload),
-      user: { id: user.id, email: user.email },
+    const user: UserResponsePayload = {
+      id: userEntity.id,
+      email: userEntity.email,
     };
+
+    const access_token = createTokenForUser(this.jwtService, user);
+
+    return { access_token, user };
   }
 
   async signup(
     data: SignupDto,
   ): Promise<{ access_token: string; user: UserResponsePayload }> {
     const exists = await this.userService.findByEmail(data.email);
-    if (exists) {
-      throw new BadRequestException('User with that email already exists');
-    }
 
-    const user = await this.userService.create(data);
-    const payload: JwtPayload = { sub: user.id, email: user.email };
-    return {
-      access_token: this.signPayload(payload),
-      user: { id: user.id, email: user.email },
+    if (exists) throw new BadRequestException('User already exists');
+
+    const userEntity = await this.userService.create(data);
+
+    const user: UserResponsePayload = {
+      id: userEntity.id,
+      email: userEntity.email,
     };
+
+    const access_token = createTokenForUser(this.jwtService, user);
+
+    return { access_token, user };
   }
 }
