@@ -3,7 +3,7 @@ import axios from 'axios';
 interface ImgBBResponse {
   data: {
     data: {
-      url_viewer: string;
+      url: string;
     };
   };
 }
@@ -16,10 +16,11 @@ export async function uploadToImgBB(buffer: Buffer): Promise<string> {
   const body = new URLSearchParams();
   body.append('key', apiKey);
   body.append('image', base64Image);
+  // Defualt axois for nestjs
   const response: ImgBBResponse = await axios.post(
     'https://api.imgbb.com/1/upload',
     body,
   );
 
-  return response.data.data.url_viewer;
+  return response.data.data.url;
 }

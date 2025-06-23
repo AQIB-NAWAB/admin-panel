@@ -13,6 +13,8 @@ import {
   UseInterceptors,
   UploadedFile,
   Patch,
+  BadRequestException,
+  Query,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/common/decorators/get-user.decorator';
@@ -22,6 +24,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { JwtRequestUser } from 'src/common/interfaces/jwt-request-user';
 import { IsOwnerGuard } from 'src/common/gaurds/is-owner.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { isValidImageFile } from 'src/common/utils/file';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('products')
@@ -34,14 +37,34 @@ export class ProductController {
   create(
     @Body() dto: CreateProductDto,
     @GetUser() user: JwtRequestUser,
-    @UploadedFile() image?: Express.Multer.File,
+    @UploadedFile() image: Express.Multer.File,
   ) {
+    if (!isValidImageFile(image.mimetype)) {
+      throw new BadRequestException('Only image files are allowed');
+    }
+
     return this.productService.create({ ...dto, ownerId: user.id }, image);
   }
 
   @Get()
-  findAll(@GetUser() user: JwtRequestUser) {
-    return this.productService.findAll(user.id);
+  findAll(
+    @GetUser() user: JwtRequestUser,
+    @Query('page') page = '1',
+    @Query('limit') limit = '10',
+    @Query('search') search?: string,
+    @Query('minPrice') minPrice?: string,
+    @Query('maxPrice') maxPrice?: string,
+    @Query('lowStockOnly') lowStockOnly?: string,
+  ) {
+    return this.productService.findAll(
+      user.id,
+      parseInt(page, 10),
+      parseInt(limit, 10),
+      search,
+      minPrice ? parseFloat(minPrice) : undefined,
+      maxPrice ? parseFloat(maxPrice) : undefined,
+      lowStockOnly === 'true',
+    );
   }
 
   @Get(':id')
@@ -75,11 +98,15 @@ export class ProductController {
     @UploadedFile() image: Express.Multer.File,
     @GetUser() user: JwtRequestUser,
   ) {
+    if (!isValidImageFile(image.mimetype)) {
+      throw new BadRequestException('Only image files are allowed');
+    }
+
     return this.productService.updateImage(id, image, user.id);
   }
 
   @Delete(':id')
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(HttpStatus.OK)
   @UseGuards(IsOwnerGuard)
   remove(
     @Param(

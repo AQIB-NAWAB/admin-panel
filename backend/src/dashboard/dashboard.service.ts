@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, LessThan } from 'typeorm';
 import { Product } from '../product/product.entity';
+import CONFIG from 'src/config';
 
 @Injectable()
 export class DashboardService {
@@ -33,12 +34,31 @@ export class DashboardService {
       .orderBy('date', 'ASC')
       .getRawMany();
 
-    return {
-      totalProducts,
-      recentProducts,
-      chartsData: {
-        poductCreationTimeSeriesData: productCreationData,
+    // avg price
+    const avgPrice: { avgPrice: number } = (await this.productRepo
+      .createQueryBuilder('product')
+      .select('AVG(product.price)', 'avgPrice')
+      .where('product.ownerId = :userId', { userId })
+      .getRawOne()) || { avgPrice: 0 };
+
+    // low stock quatity count
+    const lowStockCount = await this.productRepo.count({
+      where: {
+        ownerId: userId,
+        stock: LessThan(Number(CONFIG.LOW_STOCK_THRESHOLD)),
       },
+    });
+
+    const stats = {
+      totalProductsCount: totalProducts,
+      avgPrice: avgPrice.avgPrice || 0,
+      lowStockCount,
+      poductCreationTimeSeriesData: productCreationData,
+    };
+
+    return {
+      recentProducts,
+      stats,
     };
   }
 }

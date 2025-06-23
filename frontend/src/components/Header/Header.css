@@ -1,0 +1,25 @@
+.custom-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.226);
+  padding: 10px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 999999999;
+}
+
+.logo {
+  color: black;
+  font-weight: bold;
+  font-size: 20px;
+  font-family: "Poppins", sans-serif;
+}
+
+.menu {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
