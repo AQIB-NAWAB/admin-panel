@@ -1,4 +1,4 @@
-// src/product/product.module.ts
+// ../product/product.module.ts
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 

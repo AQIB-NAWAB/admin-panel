@@ -5,7 +5,7 @@ import {
   ForbiddenException,
   NotFoundException,
 } from '@nestjs/common';
-import { ProductService } from 'src/product/product.service';
+import { ProductService } from '../../product/product.service';
 import { JwtRequestUser } from '../interfaces/jwt-request-user';
 
 @Injectable()

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, LessThan } from 'typeorm';
 import { Product } from '../product/product.entity';
-import CONFIG from 'src/config';
+import CONFIG from '../config';
 
 @Injectable()
 export class DashboardService {

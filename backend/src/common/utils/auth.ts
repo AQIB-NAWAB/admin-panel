@@ -3,8 +3,8 @@ import { Response } from 'express';
 import {
   JwtPayload,
   UserResponsePayload,
-} from 'src/auth/interfaces/jwt-payload.interface';
-import CONFIG from 'src/config';
+} from '../../auth/interfaces/jwt-payload.interface';
+import CONFIG from '../../config/index';
 export function sendToken(res: Response, token: string) {
   const cookieOpts = {
     httpOnly: true,
