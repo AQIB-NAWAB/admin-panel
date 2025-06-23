@@ -13,8 +13,6 @@ A full-stack web application for managing products with a user-friendly admin da
   - [Run with Docker](#run-with-docker)
   - [Run Locally (Without Docker)](#run-locally-without-docker)
 - [API Documentation](#api-documentation)
-- [Testing](#testing)
-- [Contributing](#contributing)
 - [License](#license)
 
 ## Features
