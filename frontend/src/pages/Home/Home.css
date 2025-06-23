@@ -1,3 +1,7 @@
+.home-content {
+  background-color: white;
+  padding: 20px;
+}
 .image-container {
   position: relative;
   overflow: hidden;
@@ -24,11 +28,11 @@
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   .floating-image {
-    max-width: 200px;
+    width: 950px !important;
   }
 
   .image-container {
-    margin-top: 20px;
+    margin-top: 60px !important;
   }
 
   [class^="ant-col"] {
@@ -45,8 +49,14 @@
 }
 
 @media (max-width: 576px) {
+  .home-content {
+    padding: 0px 10px !important;
+  }
+  .image-container {
+    margin-top: 10px;
+  }
   .floating-image {
-    max-width: 150px;
+    width: 950px !important;
   }
 
   .ant-typography {
@@ -55,5 +65,9 @@
 
   .ant-paragraph {
     font-size: 12px;
+  }
+
+  .home-content .ant-row {
+    flex-direction: column-reverse;
   }
 }

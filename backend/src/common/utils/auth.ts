@@ -4,12 +4,13 @@ import {
   JwtPayload,
   UserResponsePayload,
 } from 'src/auth/interfaces/jwt-payload.interface';
+import CONFIG from 'src/config';
 export function sendToken(res: Response, token: string) {
   const cookieOpts = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: CONFIG.ENV === 'production',
     sameSite: 'lax' as const,
-    maxAge: 24 * 60 * 60 * 1000,
+    maxAge: Number(CONFIG.COOKIE_EXPIRATION_TIME) * 24 * 60 * 60 * 1000,
   };
   res.cookie('access_token', token, cookieOpts);
 }
@@ -17,7 +18,7 @@ export function sendToken(res: Response, token: string) {
 export function clearToken(res: Response) {
   res.clearCookie('access_token', {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: CONFIG.ENV === 'production',
     sameSite: 'lax' as const,
   });
 }
@@ -26,6 +27,12 @@ export function createTokenForUser(
   jwtService: JwtService,
   user: UserResponsePayload,
 ): string {
-  const payload: JwtPayload = { sub: user.id, email: user.email };
-  return jwtService.sign(payload);
+  const payload: JwtPayload = {
+    sub: user.id,
+    email: user.email,
+  };
+  return jwtService.sign(payload, {
+    secret: CONFIG.JWT_SECRET,
+    expiresIn: CONFIG.JWT_EXPIRATION_TIME,
+  });
 }

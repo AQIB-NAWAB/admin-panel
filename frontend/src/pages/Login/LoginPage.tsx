@@ -1,17 +1,51 @@
-import React from "react";
-import { Layout, Row, Col, Typography, Form, Input, Button, Card } from "antd";
+import React, { useEffect, useState } from "react";
+import {
+  Layout,
+  Row,
+  Col,
+  Typography,
+  Form,
+  Input,
+  Button,
+  Card,
+  message,
+} from "antd";
 import { useNavigateWithAuth } from "../../utils/navigate";
 import { ROUTES } from "../../constants";
-import "./SignUp.css";
+import "./Login.css";
+import { useAuth } from "../../context/AuthContext";
+import Loader from "../../components/Loader/Loader";
 
 const { Title, Text } = Typography;
 const { Content } = Layout;
 
-const SignUp: React.FC = () => {
+const LoginPage: React.FC = () => {
   const navigateWithAuth = useNavigateWithAuth();
+  const { login, loading, isAuthenticated } = useAuth();
   const [form] = Form.useForm();
+  const [error, setError] = useState<string | null>(null);
 
-  const onFinish = async () => {};
+  const onFinish = async () => {
+    setError(null);
+    try {
+      const values = form.getFieldsValue();
+      await login(values);
+      message.success("Login successful! Redirecting...");
+    } catch (err: any) {
+      const messageFromBackend =
+        err?.response?.data?.message || err?.message || "Login failed";
+      setError(messageFromBackend);
+    }
+  };
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigateWithAuth(ROUTES.DASHBOARD);
+    }
+  }, [isAuthenticated, navigateWithAuth]);
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <Layout style={{ minHeight: "100vh", background: "var(--background)" }}>
@@ -20,11 +54,17 @@ const SignUp: React.FC = () => {
           <Col>
             <Card className="login-card">
               <Title level={2} className="login-title">
-                Sign Up
+                Login
               </Title>
               <Text className="login-subtitle">
-                Access your admin panel with creating account.
+                Access your admin panel with your credentials.
               </Text>
+              <br />
+              {error && (
+                <Text type="danger" style={{ fontSize: 16 }}>
+                  {error}
+                </Text>
+              )}
               <Form
                 form={form}
                 layout="vertical"
@@ -45,6 +85,7 @@ const SignUp: React.FC = () => {
                     className="login-input"
                   />
                 </Form.Item>
+
                 <Form.Item
                   label="Password"
                   name="password"
@@ -58,6 +99,7 @@ const SignUp: React.FC = () => {
                     className="login-input"
                   />
                 </Form.Item>
+
                 <Form.Item>
                   <Button
                     size="large"
@@ -65,14 +107,15 @@ const SignUp: React.FC = () => {
                     className="btn primary"
                     block
                   >
-                    Sign Up
+                    Login
                   </Button>
                 </Form.Item>
+
                 <div className="login-links">
                   <Text>
-                    Already have account?{" "}
-                    <a onClick={() => navigateWithAuth(ROUTES.LOGIN)}>
-                      Login
+                    Don’t have an account?{" "}
+                    <a onClick={() => navigateWithAuth(ROUTES.SIGNUP)}>
+                      Sign Up
                     </a>
                   </Text>
                 </div>
@@ -85,4 +128,4 @@ const SignUp: React.FC = () => {
   );
 };
 
-export default SignUp;
+export default LoginPage;

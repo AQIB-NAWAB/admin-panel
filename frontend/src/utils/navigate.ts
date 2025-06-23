@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useCallback } from "react";
 import { useAuth } from "../context/AuthContext";
 import { isProtectedRoute } from "../utils/index";
+import { ROUTES } from "../constants";
 
 export const useNavigateWithAuth = () => {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ export const useNavigateWithAuth = () => {
         const isValid = isProtectedRoute(path);
 
       if (isValid && !isAuthenticated) {
-        navigate("/login");
+        navigate(ROUTES.LOGIN);
         return;
       }
       navigate(path);

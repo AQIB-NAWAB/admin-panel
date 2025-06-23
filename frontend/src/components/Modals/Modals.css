@@ -1,0 +1,77 @@
+.product-modal .ant-modal-content {
+  border-radius: var(--border-radius);
+  padding: var(--padding-standard);
+}
+
+.product-modal .ant-upload-list-picture .ant-upload-list-item {
+  border-radius: var(--border-radius);
+  border: 1px solid var(--light-gray);
+}
+
+.product-modal .ant-upload-list-picture .ant-upload-list-item-thumbnail img {
+  object-fit: cover;
+  border-radius: var(--border-radius);
+}
+
+.product-modal .ant-btn {
+  border-radius: var(--border-radius);
+}
+
+.product-modal .ant-btn-primary {
+  background: var(--primary-blue);
+  border-color: var(--primary-blue);
+}
+
+.product-modal .ant-btn-primary:hover {
+  background: #40a9ff;
+  border-color: #40a9ff;
+}
+
+.product-modal .ant-form-item-label > label {
+  font-weight: 500;
+  color: #595959;
+}
+
+.product-modal .ant-input,
+.product-modal .ant-input-number,
+.product-modal .ant-input-textarea {
+  border-radius: var(--border-radius);
+}
+
+@media (max-width: 768px) {
+  .product-modal {
+    width: 90% !important;
+    margin: 16px auto;
+  }
+
+  .product-modal .ant-modal-content {
+    padding: 16px;
+  }
+
+  .product-modal .ant-upload-list-picture .ant-upload-list-item {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+@media (max-width: 576px) {
+  .product-modal .ant-form-item-label > label {
+    font-size: 14px;
+  }
+
+  .product-modal .ant-input,
+  .product-modal .ant-input-number,
+  .product-modal .ant-input-textarea {
+    font-size: 14px;
+  }
+}
+
+.product-modal .ant-btn:focus,
+.product-modal .ant-upload-list-item-actions a:focus {
+  outline: 2px solid var(--primary-blue);
+  outline-offset: 2px;
+}
+
+.product-modal {
+  font-family: var(--font-family);
+}

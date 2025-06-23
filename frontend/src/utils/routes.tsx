@@ -1,6 +1,5 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import Loader from "../components/Loader/Loader";
 import { ROUTES } from "../constants";
 
 interface RouteWrapperProps {
@@ -12,15 +11,18 @@ export const RouteWrapper = ({
   component: Component,
   isProtected,
 }: RouteWrapperProps) => {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated } = useAuth();
 
-  if (loading) {
-    return <Loader />;
-  }
+
 
   if (isProtected && !isAuthenticated) {
     return <Navigate to={ROUTES.HOME} replace />;
   }
 
   return <Component />;
+};
+
+export const getCurrentRoute = (path: string): string => {
+  const route = Object.values(ROUTES).find((route) => route === path);
+  return route || ROUTES.HOME;
 };

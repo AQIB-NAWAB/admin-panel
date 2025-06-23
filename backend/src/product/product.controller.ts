@@ -14,6 +14,7 @@ import {
   UploadedFile,
   Patch,
   BadRequestException,
+  Query,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/common/decorators/get-user.decorator';
@@ -46,8 +47,24 @@ export class ProductController {
   }
 
   @Get()
-  findAll(@GetUser() user: JwtRequestUser) {
-    return this.productService.findAll(user.id);
+  findAll(
+    @GetUser() user: JwtRequestUser,
+    @Query('page') page = '1',
+    @Query('limit') limit = '10',
+    @Query('search') search?: string,
+    @Query('minPrice') minPrice?: string,
+    @Query('maxPrice') maxPrice?: string,
+    @Query('lowStockOnly') lowStockOnly?: string,
+  ) {
+    return this.productService.findAll(
+      user.id,
+      parseInt(page, 10),
+      parseInt(limit, 10),
+      search,
+      minPrice ? parseFloat(minPrice) : undefined,
+      maxPrice ? parseFloat(maxPrice) : undefined,
+      lowStockOnly === 'true',
+    );
   }
 
   @Get(':id')

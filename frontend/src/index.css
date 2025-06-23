@@ -1,5 +1,17 @@
 :root {
   --primary: #3642f0;
+  --bg: #f9f9fc;
+  --card-bg: #ffffff;
+  --text-dark: #1a1a1a;
+  --text-light: #6b6b6b;
+  --border-radius: 12px;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --sidebar-width-open: 250px;
+  --sidebar-width-closed: 60px;
+  --padding-standard: 20px;
+  --card-border-radius: 8px;
+  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --transition-duration: 0.3s;
 }
 
 body {

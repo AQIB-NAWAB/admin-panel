@@ -8,10 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { LoginDto } from './dto/login.dto';
 import { SignupDto } from './dto/signup.dto';
-import {
-  JwtPayload,
-  UserResponsePayload,
-} from './interfaces/jwt-payload.interface';
+import { UserResponsePayload } from './interfaces/jwt-payload.interface';
 import { createTokenForUser } from 'src/common/utils/auth';
 
 @Injectable()
@@ -21,12 +18,9 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  private signPayload(payload: JwtPayload) {
-    return this.jwtService.sign(payload);
-  }
-
   async validateUser(email: string, password: string) {
     const user = await this.userService.findByEmail(email);
+    // TODO
     if (!user || !(await user.comparePassword(password))) {
       throw new UnauthorizedException('Invalid credentials');
     }
@@ -44,7 +38,6 @@ export class AuthService {
     };
 
     const access_token = createTokenForUser(this.jwtService, user);
-
     return { access_token, user };
   }
 

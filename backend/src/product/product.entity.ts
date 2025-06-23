@@ -26,6 +26,9 @@ export class Product {
   @Column('decimal')
   price: number;
 
+  @Column('int', { default: 0 })
+  stock: number;
+
   @ManyToOne(() => User, (user) => user.id, {
     nullable: false,
     onDelete: 'CASCADE',

@@ -1,0 +1,133 @@
+/* Main container */
+.products-container {
+  padding: var(--padding-standard);
+  background: var(--light-gray);
+  min-height: 100vh;
+  transition: margin-left var(--transition-duration) ease;
+}
+
+.products-container.sidebar-open {
+  margin-left: var(--sidebar-width-open);
+}
+
+.products-container.sidebar-closed {
+  margin-left: var(--sidebar-width-closed);
+}
+
+.page-title {
+  margin-bottom: var(--padding-standard);
+  font-size: 24px;
+  color: #1a1a1a;
+}
+
+.filters-row {
+  margin-bottom: var(--padding-standard);
+}
+
+.search-input {
+  border-radius: var(--border-radius);
+  margin-top: 10px;
+}
+
+.filter-group .price-slider{
+  margin-top: 13px;
+
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filter-group label {
+  font-weight: 500;
+  color: #595959;
+}
+
+.products-table {
+  background: var(--white);
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.modal-content p {
+  margin: 8px 0;
+  color: #595959;
+}
+
+.modal-content p strong {
+  color: #1a1a1a;
+  margin-right: 8px;
+}
+
+@media (max-width: 1024px) {
+  .filters-row {
+    flex-direction: column;
+  }
+
+  .products-container.sidebar-open,
+  .products-container.sidebar-closed {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .products-container {
+    padding: 16px;
+  }
+
+  .page-title {
+    font-size: 20px;
+  }
+
+  .filters-row {
+    gap: 12px;
+  }
+
+  .search-input,
+  .filter-group .ant-select,
+  .filter-group .ant-slider {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .page-title {
+    font-size: 18px;
+  }
+
+  .modal-content img {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+/* Accessibility */
+.products-table .ant-btn:focus,
+.search-input:focus,
+.filter-group .ant-select-focused .ant-select-selector,
+.filter-group .ant-slider:hover .ant-slider-handle {
+  outline: 2px solid var(--primary-blue);
+  outline-offset: 2px;
+}
+
+
+/* Add to ProductsPage.css */
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--padding-standard);
+}
+
+.create-btn {
+  border-color: var(--primary-blue);
+  color: white;
+  border-radius: var(--border-radius);
+}
+
+.create-btn:hover {
+  background: #40a9ff;
+  border-color: #40a9ff;
+}

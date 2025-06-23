@@ -2,19 +2,17 @@ import React from "react";
 import { Layout, Row, Col, Typography, Button } from "antd";
 import { useNavigateWithAuth } from "../../utils/navigate";
 import { HeroImg2, ROUTES } from "../../constants";
-import { useAuth } from "../../context/AuthContext";
 import "./Home.css";
 
 const { Title, Paragraph } = Typography;
 const { Content } = Layout;
 
-const Home: React.FC = () => {
+const HomePage: React.FC = () => {
   const navigateWithAuth = useNavigateWithAuth();
-  const { isAuthenticated } = useAuth();
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Content style={{ padding: "50px", background: "white" }}>
+      <Content className="home-content">
         <Row
           justify="space-between"
           align="middle"
@@ -25,30 +23,21 @@ const Home: React.FC = () => {
             md={12}
             style={{ textAlign: "left", paddingRight: "20px" }}
           >
-            <Title level={1} className="title" >Welcome to Mega Managment</Title>
+            <Title level={1} className="title">
+              Welcome to Mega Managment
+            </Title>
             <Paragraph className="description">
               Manage your products and settings with ease. Get started by
               logging in or exploring the dashboard.
             </Paragraph>
-            {isAuthenticated ? (
-              <Button
-                type="primary"
-                size="large"
-                onClick={() => navigateWithAuth(ROUTES.LOGIN)}
-                style={{ marginRight: "10px" }}
-              >
-                Login
-              </Button>
-            ) : (
-              <Button
-                size="large"
-                onClick={() => navigateWithAuth(ROUTES.DASHBOARD)}
-                style={{ marginLeft: "10px" }}
-                className="btn"
-              >
-                Dashboard
-              </Button>
-            )}
+            <Button
+              size="large"
+              onClick={() => navigateWithAuth(ROUTES.DASHBOARD)}
+              style={{ marginRight: "10px" }}
+              className="btn"
+            >
+              Let's Get Started
+            </Button>
           </Col>
           <Col
             xs={24}
@@ -71,4 +60,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default HomePage;

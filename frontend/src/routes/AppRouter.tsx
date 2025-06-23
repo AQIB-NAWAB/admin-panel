@@ -4,32 +4,45 @@ import { RouteWrapper } from "../utils/routes";
 import { ROUTES } from "../constants";
 import { isProtectedRoute } from "../utils";
 
-const Home = React.lazy(() => import("../pages/Home/Home"));
-const Login = React.lazy(() => import("../pages/Login/Login"));
-const Signup = React.lazy(() => import("../pages/SignUp/Signup"));
+const HomePage = React.lazy(() => import("../pages/Home/HomePage"));
+const LoginPage = React.lazy(() => import("../pages/Login/LoginPage"));
+const SignupPage = React.lazy(() => import("../pages/SignUp/SignupPage"));
 const NotFoundPage = React.lazy(() => import("../pages/NotFound/NotFoundPage"));
+const DashboardPage = React.lazy(
+  () => import("../pages/Dashboard/DashboardPage")
+);
+const ProductsPage = React.lazy(() => import("../pages/Products/ProductsPage"));
+const LogoutPage = React.lazy(() => import("../pages/Logout/LogoutPage"));
 
 const AppRouter = () => {
   const routes = [
     {
       path: ROUTES.HOME,
-      component: Home,
-      isProtected: isProtectedRoute(ROUTES.HOME),
+      component: HomePage,
     },
     {
       path: ROUTES.LOGIN,
-      component: Login,
-      isProtected: isProtectedRoute(ROUTES.LOGIN),
+      component: LoginPage,
     },
     {
       path: ROUTES.SIGNUP,
-      component: Signup,
-      isProtected: isProtectedRoute(ROUTES.LOGIN),
+      component: SignupPage,
+    },
+    {
+      path: ROUTES.DASHBOARD,
+      component: DashboardPage,
+    },
+    {
+      path: ROUTES.PRODUCTS,
+      component: ProductsPage,
+    },
+    {
+      path: ROUTES.LOGOUT,
+      component: LogoutPage,
     },
     {
       path: "*",
       component: NotFoundPage,
-      isProtected: false,
     },
   ];
 
@@ -41,7 +54,7 @@ const AppRouter = () => {
         element={
           <RouteWrapper
             component={route.component}
-            isProtected={route.isProtected}
+            isProtected={isProtectedRoute(route.path)}
           />
         }
       />

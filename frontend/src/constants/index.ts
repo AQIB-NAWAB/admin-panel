@@ -4,15 +4,14 @@ import HeroImg3 from "../assets/images/3.png";
 
 const ProectedRoutes = {
   DASHBOARD: "/dashboard",
-  USER: "/user",
-  PRODUCTS: "/dashboard/products",
+  PRODUCTS: "/products",
 };
 
 const PublicRoutes = {
   HOME: "/",
   LOGIN: "/login",
   SIGNUP: "/signup",
-  ABOUT: "/about",
+  LOGOUT:"/logout",
 };
 
 const ROUTES = {
@@ -20,7 +19,12 @@ const ROUTES = {
   ...PublicRoutes,
 };
 
+const OpenSidebarBtnClass = "open-sidebar-btn";
+
 export { ProectedRoutes, PublicRoutes, ROUTES };
 
 // Images
 export { HeroImg1, HeroImg2, HeroImg3 };
+
+// Constants for the application
+export { OpenSidebarBtnClass };
