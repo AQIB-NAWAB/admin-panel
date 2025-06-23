@@ -3,6 +3,7 @@
 A full-stack web application for managing products with a user-friendly admin dashboard. Users can register, log in, and perform CRUD operations on products, including image uploads. The application is containerized using Docker for easy setup and deployment.
 
 ## Table of Contents
+
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Project Structure](#project-structure)
@@ -16,6 +17,7 @@ A full-stack web application for managing products with a user-friendly admin da
 - [License](#license)
 
 ## Features
+
 - **User Authentication**: JWT-based authentication with login, signup, logout, and protected routes.
 - **Product Management**: Create, Read, Update, Delete (CRUD) operations for products.
 - **Image Uploads**: Integrated with imgBB for product image uploads.
@@ -30,7 +32,9 @@ A full-stack web application for managing products with a user-friendly admin da
 - **Containerized**: Dockerized setup with Docker Compose for consistent development and deployment.
 
 ## Tech Stack
+
 ### Backend
+
 - **NestJS**: A progressive Node.js framework for building scalable server-side applications.
 - **TypeORM**: ORM for PostgreSQL database management.
 - **JWT**: JSON Web Tokens for authentication.
@@ -39,6 +43,7 @@ A full-stack web application for managing products with a user-friendly admin da
 - **Docker**: Containerization for consistent environments.
 
 ### Frontend
+
 - **React**: JavaScript library for building user interfaces.
 - **Vite**: Next-generation frontend tooling for fast development.
 - **Ant Design**: UI component library for a modern and responsive design.
@@ -48,14 +53,17 @@ A full-stack web application for managing products with a user-friendly admin da
 - **Docker**: Containerized frontend for consistency.
 
 ### Database
+
 - **PostgreSQL**: Relational database for storing user and product data.
 
 ### DevOps
+
 - **Docker & Docker Compose**: For containerization and orchestration.
 - **ESLint**: For code linting in both frontend and backend.
 - **Vercel**: Optional deployment configuration for frontend (if used).
 
 ## Project Structure
+
 ```
 ├── backend
 │   ├── dist                    # Compiled JavaScript files
@@ -102,6 +110,7 @@ A full-stack web application for managing products with a user-friendly admin da
 ```
 
 ## Prerequisites
+
 - **Node.js**: v20 or higher
 - **Docker**: Latest stable version
 - **Docker Compose**: Latest stable version
@@ -111,14 +120,17 @@ A full-stack web application for managing products with a user-friendly admin da
 ## Setup Instructions
 
 ### Clone the Repository
+
 ```bash
 git clone <repository-url>
 cd <project-directory>
 ```
 
 ### Environment Variables
+
 1. **Backend**:
    Create a `.env` file in the `backend` directory with the following:
+
    ```env
    # Port
    PORT=3000
@@ -146,6 +158,11 @@ cd <project-directory>
    FRONTEND_URL=http://localhost:5173
    ```
 
+#### Steps to get the imgBB API Key:
+
+- Sign up at [imgBB](https://imgbb.com/login).
+- Visit the [API documentation](https://api.imgbb.com/) to generate your API key.
+
 2. **Frontend**:
    Create a `.env` file in the `frontend` directory with the following:
    ```env
@@ -153,15 +170,17 @@ cd <project-directory>
    ```
 
 ### Run with Docker
+
 1. Ensure Docker and Docker Compose are installed.
 2. From the project root, run:
    ```bash
    docker-compose up --build
    ```
 3. Access the application:
+
    - Frontend: `http://localhost:5173`
    - Backend API: `http://localhost:3000/v1`
-   - Swagger Docs: `http://localhost:3000/api`
+   - Swagger Docs: `http://localhost:3000/api/docs`
 
 4. To stop the containers:
    ```bash
@@ -169,7 +188,9 @@ cd <project-directory>
    ```
 
 ### Run Locally (Without Docker)
+
 1. **Backend**:
+
    - Navigate to the `backend` directory:
      ```bash
      cd backend
@@ -189,6 +210,7 @@ cd <project-directory>
      ```
 
 2. **Frontend**:
+
    - Navigate to the `frontend` directory:
      ```bash
      cd frontend
@@ -207,6 +229,7 @@ cd <project-directory>
    - Backend API: `http://localhost:3000/v1`
 
 ## API Documentation
+
 - Swagger documentation is available at `http://localhost:3000/api/docs` when the backend is running.
 - Key endpoints include:
   - `/v1/auth/signup`: Register a new user
@@ -215,4 +238,5 @@ cd <project-directory>
   - `/v1/dashboard`: Dashboard data (protected)
 
 ## License
+
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
