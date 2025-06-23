@@ -64,6 +64,17 @@ A full-stack web application for managing products with a user-friendly admin da
 
 ## Project Structure
 
+### Project structure Root
+
+```
+├──backend
+├──frontend
+├──docker-compose.yml
+├──README.md
+```
+
+### Project structure backend
+
 ```
 ├── backend
 │   ├── dist                    # Compiled JavaScript files
@@ -84,7 +95,11 @@ A full-stack web application for managing products with a user-friendly admin da
 │   ├── tsconfig.json           # TypeScript configuration
 │   └── vercel.json             # Vercel deployment configuration (optional)
 ├── docker-compose.yml          # Docker Compose configuration
-├── frontend
+```
+
+### Project structure frontend
+
+```├── frontend
 │   ├── Dockerfile              # Docker configuration for frontend
 │   ├── eslint.config.js        # ESLint configuration
 │   ├── index.html              # HTML entry point
@@ -106,7 +121,6 @@ A full-stack web application for managing products with a user-friendly admin da
 │   │   └── vite-env.d.ts       # Vite environment type definitions
 │   ├── tsconfig.json           # TypeScript configuration
 │   └── vite.config.ts          # Vite configuration
-└── README.md                   # Project documentation
 ```
 
 ## Prerequisites
