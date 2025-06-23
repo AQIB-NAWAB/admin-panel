@@ -8,8 +8,8 @@ import { Repository, ILike, Between, LessThanOrEqual } from 'typeorm';
 import { Product } from './product.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { uploadToImgBB } from 'src/common/utils/uploadImage';
-import CONFIG from 'src/config';
+import { uploadToImgBB } from '../common/utils/uploadImage';
+import CONFIG from '../config/index';
 
 @Injectable()
 export class ProductService {

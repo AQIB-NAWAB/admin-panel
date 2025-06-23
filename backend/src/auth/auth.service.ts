@@ -9,7 +9,7 @@ import { UserService } from '../user/user.service';
 import { LoginDto } from './dto/login.dto';
 import { SignupDto } from './dto/signup.dto';
 import { UserResponsePayload } from './interfaces/jwt-payload.interface';
-import { createTokenForUser } from 'src/common/utils/auth';
+import { createTokenForUser } from '../common/utils/auth';
 
 @Injectable()
 export class AuthService {

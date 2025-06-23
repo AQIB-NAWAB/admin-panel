@@ -18,7 +18,7 @@ const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const product_entity_1 = require("./product.entity");
 const uploadImage_1 = require("../common/utils/uploadImage");
-const config_1 = require("../config");
+const index_1 = require("../config/index");
 let ProductService = class ProductService {
     repo;
     constructor(repo) {
@@ -50,7 +50,7 @@ let ProductService = class ProductService {
             where.price = (0, typeorm_2.Between)(0, maxPrice);
         }
         if (lowStockOnly) {
-            where.stock = (0, typeorm_2.LessThanOrEqual)(Number(config_1.default.LOW_STOCK_THRESHOLD));
+            where.stock = (0, typeorm_2.LessThanOrEqual)(Number(index_1.default.LOW_STOCK_THRESHOLD));
         }
         const [data, total] = await this.repo.findAndCount({
             where,

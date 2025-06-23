@@ -1,7 +1,7 @@
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { JwtRequestUser } from 'src/common/interfaces/jwt-request-user';
+import { JwtRequestUser } from '../common/interfaces/jwt-request-user';
 export declare class ProductController {
     private readonly productService;
     constructor(productService: ProductService);

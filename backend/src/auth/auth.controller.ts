@@ -13,9 +13,9 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { SignupDto } from './dto/signup.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { GetUser } from 'src/common/decorators/get-user.decorator';
+import { GetUser } from '../common/decorators/get-user.decorator';
 import { UserResponsePayload } from './interfaces/jwt-payload.interface';
-import { clearToken, sendToken } from 'src/common/utils/auth';
+import { clearToken, sendToken } from '../common/utils/auth';
 
 @Controller('auth')
 export class AuthController {

@@ -17,14 +17,14 @@ import {
   Query,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { GetUser } from 'src/common/decorators/get-user.decorator';
+import { GetUser } from '../common/decorators/get-user.decorator';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { JwtRequestUser } from 'src/common/interfaces/jwt-request-user';
-import { IsOwnerGuard } from 'src/common/gaurds/is-owner.guard';
+import { JwtRequestUser } from '../common/interfaces/jwt-request-user';
+import { IsOwnerGuard } from '../common/gaurds/is-owner.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { isValidImageFile } from 'src/common/utils/file';
+import { isValidImageFile } from '../common/utils/file';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('products')
