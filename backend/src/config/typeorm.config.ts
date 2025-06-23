@@ -14,4 +14,7 @@ export const typeOrmConfig = (
   database: configService.get<string>('DB_NAME'),
   autoLoadEntities: true,
   synchronize: configService.get<string>('ENV') !== 'production',
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
