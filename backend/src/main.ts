@@ -9,13 +9,16 @@ import { DataSource } from 'typeorm';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // Cookie parser middleware
   app.use(cookieParser());
 
+  // Enable CORS
   app.enableCors({
     origin: CONFIG.FRONTEND_URL,
     credentials: true,
   });
 
+  // Global validation pipes
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -24,11 +27,13 @@ async function bootstrap() {
     }),
   );
 
+  // API versioning
   app.enableVersioning({
     type: VersioningType.URI,
     defaultVersion: '1',
   });
 
+  // Swagger configuration
   const config = new DocumentBuilder()
     .setTitle('Admin Dashboard API')
     .setDescription('Basic CRUD operations for products')
@@ -38,6 +43,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
+  // Database migrations
   const dataSource = app.get(DataSource);
   await dataSource.runMigrations();
 
