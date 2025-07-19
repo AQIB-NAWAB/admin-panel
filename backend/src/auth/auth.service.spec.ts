@@ -5,8 +5,6 @@ import { UserService } from '../user/user.service';
 
 describe('AuthService - Token Functionality', () => {
   let authService: AuthService;
-  let userService: UserService;
-  let jwtService: JwtService;
 
   const mockUser = {
     id: 'test-id',
@@ -39,8 +37,6 @@ describe('AuthService - Token Functionality', () => {
     }).compile();
 
     authService = module.get<AuthService>(AuthService);
-    userService = module.get<UserService>(UserService);
-    jwtService = module.get<JwtService>(JwtService);
   });
 
   afterEach(() => {

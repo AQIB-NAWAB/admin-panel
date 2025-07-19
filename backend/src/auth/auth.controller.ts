@@ -14,7 +14,6 @@ import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { SignupDto } from './dto/signup.dto';
-import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../common/decorators/get-user.decorator';
 import { UserResponsePayload } from './interfaces/jwt-payload.interface';
@@ -30,7 +29,8 @@ export class AuthController {
     @Body() body: SignupDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { access_token, refresh_token, user } = await this.authService.signup(body);
+    const { access_token, refresh_token, user } =
+      await this.authService.signup(body);
 
     sendTokens(res, access_token, refresh_token);
 
@@ -43,7 +43,8 @@ export class AuthController {
     @Body() data: LoginDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { access_token, refresh_token, user } = await this.authService.login(data);
+    const { access_token, refresh_token, user } =
+      await this.authService.login(data);
 
     sendTokens(res, access_token, refresh_token);
 
@@ -56,17 +57,17 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const refreshToken = req.cookies?.refresh_token;
-    
+    const refreshToken = (req.cookies as Record<string, string>)?.refresh_token;
+
     if (!refreshToken) {
       throw new UnauthorizedException('Refresh token not found');
     }
 
-    const { access_token } = await this.authService.refreshToken({ 
-      refresh_token: refreshToken 
+    const result = await this.authService.refreshToken({
+      refresh_token: refreshToken,
     });
 
-    sendToken(res, access_token);
+    sendToken(res, result.access_token);
 
     return { message: 'Token refreshed successfully' };
   }

@@ -7,6 +7,6 @@ export declare class User {
     updatedAt: Date;
     hashPassword(): Promise<void>;
     comparePassword(password: string): Promise<boolean>;
-    updateRefreshToken(refreshToken: string): Promise<void>;
-    clearRefreshToken(): Promise<void>;
+    updateRefreshToken(refreshToken: string): void;
+    clearRefreshToken(): void;
 }

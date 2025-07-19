@@ -9,10 +9,9 @@ import { UserService } from '../user/user.service';
 import { LoginDto } from './dto/login.dto';
 import { SignupDto } from './dto/signup.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
-import { 
-  UserResponsePayload, 
+import {
+  UserResponsePayload,
   TokenResponse,
-  JwtRefreshPayload 
 } from './interfaces/jwt-payload.interface';
 import { createTokensForUser } from '../common/utils/auth';
 import CONFIG from '../config/index';
@@ -33,9 +32,7 @@ export class AuthService {
     return user;
   }
 
-  async login(
-    data: LoginDto,
-  ): Promise<TokenResponse> {
+  async login(data: LoginDto): Promise<TokenResponse> {
     const userEntity = await this.validateUser(data.email, data.password);
 
     const user: UserResponsePayload = {
@@ -43,21 +40,22 @@ export class AuthService {
       email: userEntity.email,
     };
 
-    const { accessToken, refreshToken } = createTokensForUser(this.jwtService, user);
-    
+    const { accessToken, refreshToken } = createTokensForUser(
+      this.jwtService,
+      user,
+    );
+
     // Store refresh token in database
     await this.userService.updateRefreshToken(userEntity.id, refreshToken);
 
-    return { 
-      access_token: accessToken, 
+    return {
+      access_token: accessToken,
       refresh_token: refreshToken,
-      user 
+      user,
     };
   }
 
-  async signup(
-    data: SignupDto,
-  ): Promise<TokenResponse> {
+  async signup(data: SignupDto): Promise<TokenResponse> {
     const exists = await this.userService.findByEmail(data.email);
 
     if (exists) throw new BadRequestException('User already exists');
@@ -69,28 +67,35 @@ export class AuthService {
       email: userEntity.email,
     };
 
-    const { accessToken, refreshToken } = createTokensForUser(this.jwtService, user);
-    
+    const { accessToken, refreshToken } = createTokensForUser(
+      this.jwtService,
+      user,
+    );
+
     // Store refresh token in database
     await this.userService.updateRefreshToken(userEntity.id, refreshToken);
 
-    return { 
-      access_token: accessToken, 
+    return {
+      access_token: accessToken,
       refresh_token: refreshToken,
-      user 
+      user,
     };
   }
 
-  async refreshToken(refreshTokenDto: RefreshTokenDto): Promise<{ access_token: string }> {
+  async refreshToken(
+    refreshTokenDto: RefreshTokenDto,
+  ): Promise<{ access_token: string }> {
     const { refresh_token } = refreshTokenDto;
 
     try {
       // Verify refresh token
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const payload = this.jwtService.verify(refresh_token, {
         secret: CONFIG.JWT_REFRESH_SECRET,
-      }) as JwtRefreshPayload;
+      });
 
       // Check if token type is correct
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       if (payload.tokenType !== 'refresh') {
         throw new UnauthorizedException('Invalid token type');
       }
@@ -102,6 +107,7 @@ export class AuthService {
       }
 
       // Verify the token belongs to the user
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       if (user.id !== payload.sub) {
         throw new UnauthorizedException('Token mismatch');
       }
@@ -114,7 +120,7 @@ export class AuthService {
       const { accessToken } = createTokensForUser(this.jwtService, userPayload);
 
       return { access_token: accessToken };
-    } catch (error) {
+    } catch {
       throw new UnauthorizedException('Invalid or expired refresh token');
     }
   }

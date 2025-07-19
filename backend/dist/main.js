@@ -36,5 +36,5 @@ async function bootstrap() {
     const port = config_1.default.PORT;
     await app.listen(port);
 }
-bootstrap();
+void bootstrap();
 //# sourceMappingURL=main.js.map

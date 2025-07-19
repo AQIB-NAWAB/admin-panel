@@ -40,7 +40,7 @@ let AuthService = class AuthService {
         return {
             access_token: accessToken,
             refresh_token: refreshToken,
-            user
+            user,
         };
     }
     async signup(data) {
@@ -57,7 +57,7 @@ let AuthService = class AuthService {
         return {
             access_token: accessToken,
             refresh_token: refreshToken,
-            user
+            user,
         };
     }
     async refreshToken(refreshTokenDto) {
@@ -83,7 +83,7 @@ let AuthService = class AuthService {
             const { accessToken } = (0, auth_1.createTokensForUser)(this.jwtService, userPayload);
             return { access_token: accessToken };
         }
-        catch (error) {
+        catch {
             throw new common_1.UnauthorizedException('Invalid or expired refresh token');
         }
     }
