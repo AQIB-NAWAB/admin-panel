@@ -29,7 +29,10 @@ export class UserService {
     return this.userRepo.findOne({ where: { id } });
   }
 
-  async updateRefreshToken(userId: string, refreshToken: string): Promise<void> {
+  async updateRefreshToken(
+    userId: string,
+    refreshToken: string,
+  ): Promise<void> {
     await this.userRepo.update(userId, { refreshToken });
   }
 

@@ -37,11 +37,11 @@ export class User {
     return bcrypt.compare(password, this.password);
   }
 
-  async updateRefreshToken(refreshToken: string): Promise<void> {
+  updateRefreshToken(refreshToken: string): void {
     this.refreshToken = refreshToken;
   }
 
-  async clearRefreshToken(): Promise<void> {
+  clearRefreshToken(): void {
     this.refreshToken = null;
   }
 }

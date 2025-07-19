@@ -19,3 +19,11 @@ export interface TokenResponse {
   refresh_token: string;
   user: UserResponsePayload;
 }
+
+export interface RefreshTokenVerifyPayload {
+  sub: string;
+  email: string;
+  tokenType: string;
+  iat?: number;
+  exp?: number;
+}

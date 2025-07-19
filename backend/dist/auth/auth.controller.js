@@ -40,10 +40,10 @@ let AuthController = class AuthController {
         if (!refreshToken) {
             throw new common_1.UnauthorizedException('Refresh token not found');
         }
-        const { access_token } = await this.authService.refreshToken({
-            refresh_token: refreshToken
+        const result = await this.authService.refreshToken({
+            refresh_token: refreshToken,
         });
-        (0, auth_1.sendToken)(res, access_token);
+        (0, auth_1.sendToken)(res, result.access_token);
         return { message: 'Token refreshed successfully' };
     }
     getProfile(user) {

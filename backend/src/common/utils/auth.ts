@@ -7,7 +7,11 @@ import {
 } from '../../auth/interfaces/jwt-payload.interface';
 import CONFIG from '../../config/index';
 
-export function sendTokens(res: Response, accessToken: string, refreshToken: string) {
+export function sendTokens(
+  res: Response,
+  accessToken: string,
+  refreshToken: string,
+) {
   const cookieOpts = {
     httpOnly: true,
     secure: CONFIG.ENV === 'production',

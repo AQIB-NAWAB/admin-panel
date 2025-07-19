@@ -25,10 +25,10 @@ let User = class User {
     async comparePassword(password) {
         return bcrypt.compare(password, this.password);
     }
-    async updateRefreshToken(refreshToken) {
+    updateRefreshToken(refreshToken) {
         this.refreshToken = refreshToken;
     }
-    async clearRefreshToken() {
+    clearRefreshToken() {
         this.refreshToken = null;
     }
 };
