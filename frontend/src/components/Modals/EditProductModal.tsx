@@ -76,7 +76,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
         {
           uid: "-1",
           name: file.name,
-          status: "done",
+          status: "done" as const,
           url: URL.createObjectURL(file),
         },
       ]
@@ -85,7 +85,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
         {
           uid: "-1",
           name: "current-image",
-          status: "done",
+          status: "done" as const,
           url: product.image,
         },
       ]
