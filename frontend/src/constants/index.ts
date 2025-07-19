@@ -12,6 +12,7 @@ const PublicRoutes = {
   LOGIN: "/login",
   SIGNUP: "/signup",
   LOGOUT:"/logout",
+  DEMO: "/demo",
 };
 
 const ROUTES = {

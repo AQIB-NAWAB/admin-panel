@@ -11,6 +11,7 @@ const NotFoundPage = React.lazy(() => import("../pages/NotFound/NotFoundPage"));
 const DashboardPage = React.lazy(
   () => import("../pages/Dashboard/DashboardPage")
 );
+const DemoPage = React.lazy(() => import("../pages/Demo/DemoPage"));
 const ProductsPage = React.lazy(() => import("../pages/Products/ProductsPage"));
 const LogoutPage = React.lazy(() => import("../pages/Logout/LogoutPage"));
 
@@ -31,6 +32,10 @@ const AppRouter = () => {
     {
       path: ROUTES.DASHBOARD,
       component: DashboardPage,
+    },
+    {
+      path: ROUTES.DEMO,
+      component: DemoPage,
     },
     {
       path: ROUTES.PRODUCTS,
