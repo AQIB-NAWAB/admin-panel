@@ -59,6 +59,25 @@
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15) !important;
 }
 
+.home-content .btn-secondary {
+  background: transparent !important;
+  border: 2px solid rgba(255, 255, 255, 0.5) !important;
+  color: white !important;
+  padding: 16px 32px !important;
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  border-radius: var(--border-radius) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1) !important;
+  transition: all var(--transition-duration) var(--transition-ease) !important;
+}
+
+.home-content .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.7) !important;
+  transform: translateY(-3px) !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15) !important;
+}
+
 .image-container {
   position: relative;
   overflow: hidden;

@@ -33,10 +33,17 @@ const HomePage: React.FC = () => {
             <Button
               size="large"
               onClick={() => navigateWithAuth(ROUTES.DASHBOARD)}
-              style={{ marginRight: "10px" }}
+              style={{ marginRight: "16px" }}
               className="btn"
             >
               Let's Get Started
+            </Button>
+            <Button
+              size="large"
+              onClick={() => navigateWithAuth(ROUTES.DEMO)}
+              className="btn-secondary"
+            >
+              View Demo
             </Button>
           </Col>
           <Col
