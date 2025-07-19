@@ -26,20 +26,32 @@ let AuthController = class AuthController {
         this.authService = authService;
     }
     async signup(body, res) {
-        const { access_token, user } = await this.authService.signup(body);
-        (0, auth_1.sendToken)(res, access_token);
+        const { access_token, refresh_token, user } = await this.authService.signup(body);
+        (0, auth_1.sendTokens)(res, access_token, refresh_token);
         return { user };
     }
     async login(data, res) {
-        const { access_token, user } = await this.authService.login(data);
-        (0, auth_1.sendToken)(res, access_token);
+        const { access_token, refresh_token, user } = await this.authService.login(data);
+        (0, auth_1.sendTokens)(res, access_token, refresh_token);
         return { user };
+    }
+    async refresh(req, res) {
+        const refreshToken = req.cookies?.refresh_token;
+        if (!refreshToken) {
+            throw new common_1.UnauthorizedException('Refresh token not found');
+        }
+        const { access_token } = await this.authService.refreshToken({
+            refresh_token: refreshToken
+        });
+        (0, auth_1.sendToken)(res, access_token);
+        return { message: 'Token refreshed successfully' };
     }
     getProfile(user) {
         return user;
     }
-    logout(res) {
-        (0, auth_1.clearToken)(res);
+    async logout(user, res) {
+        await this.authService.logout(user.id);
+        (0, auth_1.clearTokens)(res);
         return { message: 'Logged out successfully.' };
     }
 };
@@ -63,6 +75,15 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "login", null);
 __decorate([
+    (0, common_1.Post)('refresh'),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Res)({ passthrough: true })),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "refresh", null);
+__decorate([
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
     (0, common_1.Get)('me'),
     __param(0, (0, get_user_decorator_1.GetUser)()),
@@ -71,12 +92,14 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], AuthController.prototype, "getProfile", null);
 __decorate([
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
     (0, common_1.Post)('logout'),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
-    __param(0, (0, common_1.Res)({ passthrough: true })),
+    __param(0, (0, get_user_decorator_1.GetUser)()),
+    __param(1, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
 ], AuthController.prototype, "logout", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)('auth'),

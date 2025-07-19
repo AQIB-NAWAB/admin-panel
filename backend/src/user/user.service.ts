@@ -24,4 +24,20 @@ export class UserService {
     const user = this.userRepo.create(data);
     return this.userRepo.save(user);
   }
+
+  async findById(id: string): Promise<User | null> {
+    return this.userRepo.findOne({ where: { id } });
+  }
+
+  async updateRefreshToken(userId: string, refreshToken: string): Promise<void> {
+    await this.userRepo.update(userId, { refreshToken });
+  }
+
+  async findByRefreshToken(refreshToken: string): Promise<User | null> {
+    return this.userRepo.findOne({ where: { refreshToken } });
+  }
+
+  async clearRefreshToken(userId: string): Promise<void> {
+    await this.userRepo.update(userId, { refreshToken: null });
+  }
 }

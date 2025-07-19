@@ -33,6 +33,18 @@ let UserService = class UserService {
         const user = this.userRepo.create(data);
         return this.userRepo.save(user);
     }
+    async findById(id) {
+        return this.userRepo.findOne({ where: { id } });
+    }
+    async updateRefreshToken(userId, refreshToken) {
+        await this.userRepo.update(userId, { refreshToken });
+    }
+    async findByRefreshToken(refreshToken) {
+        return this.userRepo.findOne({ where: { refreshToken } });
+    }
+    async clearRefreshToken(userId) {
+        await this.userRepo.update(userId, { refreshToken: null });
+    }
 };
 exports.UserService = UserService;
 exports.UserService = UserService = __decorate([

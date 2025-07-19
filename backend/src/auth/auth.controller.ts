@@ -7,15 +7,18 @@ import {
   Res,
   HttpCode,
   HttpStatus,
+  Req,
+  UnauthorizedException,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { SignupDto } from './dto/signup.dto';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../common/decorators/get-user.decorator';
 import { UserResponsePayload } from './interfaces/jwt-payload.interface';
-import { clearToken, sendToken } from '../common/utils/auth';
+import { clearTokens, sendTokens, sendToken } from '../common/utils/auth';
 
 @Controller('auth')
 export class AuthController {
@@ -27,9 +30,9 @@ export class AuthController {
     @Body() body: SignupDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { access_token, user } = await this.authService.signup(body);
+    const { access_token, refresh_token, user } = await this.authService.signup(body);
 
-    sendToken(res, access_token);
+    sendTokens(res, access_token, refresh_token);
 
     return { user };
   }
@@ -40,11 +43,32 @@ export class AuthController {
     @Body() data: LoginDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const { access_token, user } = await this.authService.login(data);
+    const { access_token, refresh_token, user } = await this.authService.login(data);
+
+    sendTokens(res, access_token, refresh_token);
+
+    return { user };
+  }
+
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  async refresh(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const refreshToken = req.cookies?.refresh_token;
+    
+    if (!refreshToken) {
+      throw new UnauthorizedException('Refresh token not found');
+    }
+
+    const { access_token } = await this.authService.refreshToken({ 
+      refresh_token: refreshToken 
+    });
 
     sendToken(res, access_token);
 
-    return { user };
+    return { message: 'Token refreshed successfully' };
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -53,10 +77,15 @@ export class AuthController {
     return user;
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Post('logout')
   @HttpCode(HttpStatus.OK)
-  logout(@Res({ passthrough: true }) res: Response) {
-    clearToken(res);
+  async logout(
+    @GetUser() user: UserResponsePayload,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    await this.authService.logout(user.id);
+    clearTokens(res);
 
     return { message: 'Logged out successfully.' };
   }

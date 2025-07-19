@@ -14,6 +14,7 @@ const common_1 = require("@nestjs/common");
 const jwt_1 = require("@nestjs/jwt");
 const user_service_1 = require("../user/user.service");
 const auth_1 = require("../common/utils/auth");
+const index_1 = require("../config/index");
 let AuthService = class AuthService {
     userService;
     jwtService;
@@ -34,8 +35,13 @@ let AuthService = class AuthService {
             id: userEntity.id,
             email: userEntity.email,
         };
-        const access_token = (0, auth_1.createTokenForUser)(this.jwtService, user);
-        return { access_token, user };
+        const { accessToken, refreshToken } = (0, auth_1.createTokensForUser)(this.jwtService, user);
+        await this.userService.updateRefreshToken(userEntity.id, refreshToken);
+        return {
+            access_token: accessToken,
+            refresh_token: refreshToken,
+            user
+        };
     }
     async signup(data) {
         const exists = await this.userService.findByEmail(data.email);
@@ -46,8 +52,43 @@ let AuthService = class AuthService {
             id: userEntity.id,
             email: userEntity.email,
         };
-        const access_token = (0, auth_1.createTokenForUser)(this.jwtService, user);
-        return { access_token, user };
+        const { accessToken, refreshToken } = (0, auth_1.createTokensForUser)(this.jwtService, user);
+        await this.userService.updateRefreshToken(userEntity.id, refreshToken);
+        return {
+            access_token: accessToken,
+            refresh_token: refreshToken,
+            user
+        };
+    }
+    async refreshToken(refreshTokenDto) {
+        const { refresh_token } = refreshTokenDto;
+        try {
+            const payload = this.jwtService.verify(refresh_token, {
+                secret: index_1.default.JWT_REFRESH_SECRET,
+            });
+            if (payload.tokenType !== 'refresh') {
+                throw new common_1.UnauthorizedException('Invalid token type');
+            }
+            const user = await this.userService.findByRefreshToken(refresh_token);
+            if (!user) {
+                throw new common_1.UnauthorizedException('Invalid refresh token');
+            }
+            if (user.id !== payload.sub) {
+                throw new common_1.UnauthorizedException('Token mismatch');
+            }
+            const userPayload = {
+                id: user.id,
+                email: user.email,
+            };
+            const { accessToken } = (0, auth_1.createTokensForUser)(this.jwtService, userPayload);
+            return { access_token: accessToken };
+        }
+        catch (error) {
+            throw new common_1.UnauthorizedException('Invalid or expired refresh token');
+        }
+    }
+    async logout(userId) {
+        await this.userService.clearRefreshToken(userId);
     }
 };
 exports.AuthService = AuthService;

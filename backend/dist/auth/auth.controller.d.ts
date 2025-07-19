@@ -1,4 +1,4 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { SignupDto } from './dto/signup.dto';
@@ -12,8 +12,11 @@ export declare class AuthController {
     login(data: LoginDto, res: Response): Promise<{
         user: UserResponsePayload;
     }>;
-    getProfile(user: UserResponsePayload): UserResponsePayload;
-    logout(res: Response): {
+    refresh(req: Request, res: Response): Promise<{
         message: string;
-    };
+    }>;
+    getProfile(user: UserResponsePayload): UserResponsePayload;
+    logout(user: UserResponsePayload, res: Response): Promise<{
+        message: string;
+    }>;
 }

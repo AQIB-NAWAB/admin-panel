@@ -8,8 +8,14 @@ import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { LoginDto } from './dto/login.dto';
 import { SignupDto } from './dto/signup.dto';
-import { UserResponsePayload } from './interfaces/jwt-payload.interface';
-import { createTokenForUser } from '../common/utils/auth';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { 
+  UserResponsePayload, 
+  TokenResponse,
+  JwtRefreshPayload 
+} from './interfaces/jwt-payload.interface';
+import { createTokensForUser } from '../common/utils/auth';
+import CONFIG from '../config/index';
 
 @Injectable()
 export class AuthService {
@@ -29,7 +35,7 @@ export class AuthService {
 
   async login(
     data: LoginDto,
-  ): Promise<{ access_token: string; user: UserResponsePayload }> {
+  ): Promise<TokenResponse> {
     const userEntity = await this.validateUser(data.email, data.password);
 
     const user: UserResponsePayload = {
@@ -37,13 +43,21 @@ export class AuthService {
       email: userEntity.email,
     };
 
-    const access_token = createTokenForUser(this.jwtService, user);
-    return { access_token, user };
+    const { accessToken, refreshToken } = createTokensForUser(this.jwtService, user);
+    
+    // Store refresh token in database
+    await this.userService.updateRefreshToken(userEntity.id, refreshToken);
+
+    return { 
+      access_token: accessToken, 
+      refresh_token: refreshToken,
+      user 
+    };
   }
 
   async signup(
     data: SignupDto,
-  ): Promise<{ access_token: string; user: UserResponsePayload }> {
+  ): Promise<TokenResponse> {
     const exists = await this.userService.findByEmail(data.email);
 
     if (exists) throw new BadRequestException('User already exists');
@@ -55,8 +69,57 @@ export class AuthService {
       email: userEntity.email,
     };
 
-    const access_token = createTokenForUser(this.jwtService, user);
+    const { accessToken, refreshToken } = createTokensForUser(this.jwtService, user);
+    
+    // Store refresh token in database
+    await this.userService.updateRefreshToken(userEntity.id, refreshToken);
 
-    return { access_token, user };
+    return { 
+      access_token: accessToken, 
+      refresh_token: refreshToken,
+      user 
+    };
+  }
+
+  async refreshToken(refreshTokenDto: RefreshTokenDto): Promise<{ access_token: string }> {
+    const { refresh_token } = refreshTokenDto;
+
+    try {
+      // Verify refresh token
+      const payload = this.jwtService.verify(refresh_token, {
+        secret: CONFIG.JWT_REFRESH_SECRET,
+      }) as JwtRefreshPayload;
+
+      // Check if token type is correct
+      if (payload.tokenType !== 'refresh') {
+        throw new UnauthorizedException('Invalid token type');
+      }
+
+      // Find user with this refresh token
+      const user = await this.userService.findByRefreshToken(refresh_token);
+      if (!user) {
+        throw new UnauthorizedException('Invalid refresh token');
+      }
+
+      // Verify the token belongs to the user
+      if (user.id !== payload.sub) {
+        throw new UnauthorizedException('Token mismatch');
+      }
+
+      const userPayload: UserResponsePayload = {
+        id: user.id,
+        email: user.email,
+      };
+
+      const { accessToken } = createTokensForUser(this.jwtService, userPayload);
+
+      return { access_token: accessToken };
+    } catch (error) {
+      throw new UnauthorizedException('Invalid or expired refresh token');
+    }
+  }
+
+  async logout(userId: string): Promise<void> {
+    await this.userService.clearRefreshToken(userId);
   }
 }

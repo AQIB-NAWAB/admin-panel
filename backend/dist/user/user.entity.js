@@ -16,6 +16,7 @@ let User = class User {
     id;
     email;
     password;
+    refreshToken;
     createdAt;
     updatedAt;
     async hashPassword() {
@@ -23,6 +24,12 @@ let User = class User {
     }
     async comparePassword(password) {
         return bcrypt.compare(password, this.password);
+    }
+    async updateRefreshToken(refreshToken) {
+        this.refreshToken = refreshToken;
+    }
+    async clearRefreshToken() {
+        this.refreshToken = null;
     }
 };
 exports.User = User;
@@ -38,6 +45,10 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Object)
+], User.prototype, "refreshToken", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)(),
     __metadata("design:type", Date)

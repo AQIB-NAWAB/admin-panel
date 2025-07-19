@@ -19,6 +19,9 @@ export class User {
   @Column()
   password: string;
 
+  @Column({ nullable: true })
+  refreshToken: string | null;
+
   @CreateDateColumn()
   createdAt: Date;
 
@@ -32,5 +35,13 @@ export class User {
 
   async comparePassword(password: string): Promise<boolean> {
     return bcrypt.compare(password, this.password);
+  }
+
+  async updateRefreshToken(refreshToken: string): Promise<void> {
+    this.refreshToken = refreshToken;
+  }
+
+  async clearRefreshToken(): Promise<void> {
+    this.refreshToken = null;
   }
 }

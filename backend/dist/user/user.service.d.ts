@@ -6,4 +6,8 @@ export declare class UserService {
     constructor(userRepo: Repository<User>);
     findByEmail(email: string): Promise<User | null>;
     create(data: SignupDto): Promise<User>;
+    findById(id: string): Promise<User | null>;
+    updateRefreshToken(userId: string, refreshToken: string): Promise<void>;
+    findByRefreshToken(refreshToken: string): Promise<User | null>;
+    clearRefreshToken(userId: string): Promise<void>;
 }
